@@ -1,0 +1,262 @@
+.container {
+  margin: 50px auto;
+  padding: 2px;
+  border: 5px solid #0050ea;
+  border-radius: 5px;
+}
+
+.container.primary {
+  width: 194px; /* 20*9 + 14 */
+}
+.container.middle {
+  width: 334px; /* 20*16 + 14 */
+}
+.container.high {
+  width: 514px; /* 20*25 + 14 */
+}
+
+/* 游戏等级区域 */
+.btn {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.btn-level.active {
+  background-color: #0050ea;
+  color: #fff;
+}
+
+/* 雷区 */
+.mine-wrapper {
+  margin-top: 3px;
+  padding: 5px;
+  background-color: #c3c3c3;
+}
+
+/* 状态区 */
+.mine-wrapper .info {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+  background-color: #c1c1c1;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #777 #ddd #ddd #777;
+}
+.mine-wrapper .info .number-box {
+  display: flex;
+  background-color: #000;
+} 
+.mine-wrapper .info .number-box .number {
+  width: 15px;
+  height: 27px;
+  margin: 1.5px 1px;
+  background-image: url(../img/number.png);
+  background-repeat: no-repeat;
+}
+.mine-wrapper .info .number-box .number.number-0 {
+  background-position: 0 0;
+}
+.mine-wrapper .info .number-box .number.number-1 {
+  background-position: -15px 0;
+}
+.mine-wrapper .info .number-box .number.number-2 {
+  background-position: -30px 0;
+}
+.mine-wrapper .info .number-box .number.number-3 {
+  background-position: -45px 0;
+}
+.mine-wrapper .info .number-box .number.number-4 {
+  background-position: -60px 0;
+}
+.mine-wrapper .info .number-box .number.number-5 {
+  background-position: -75px 0;
+}
+.mine-wrapper .info .number-box .number.number-6 {
+  background-position: -90px 0;
+}
+.mine-wrapper .info .number-box .number.number-7 {
+  background-position: -105px 0;
+}
+.mine-wrapper .info .number-box .number.number-8 {
+  background-position: -120px 0;
+}
+.mine-wrapper .info .number-box .number.number-9 {
+  background-position: -135px 0;
+}
+
+.mine-wrapper .info .status {
+  width: 30px;
+  height: 30px;
+  background-color: #c3c3c3;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #ddd #777 #777 #ddd;
+  background-repeat: no-repeat;
+  background-size: 24px 24px;
+  background-position: 1px 1px;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+.mine-wrapper .info .status.normal {
+  background-image: url(../img/normal.png);
+}
+.mine-wrapper .info .status.win {
+  background-image: url(../img/win.png);
+}
+.mine-wrapper .info .status.lose {
+  background-image: url(../img/lose.png);
+}
+
+/* 主游戏区 */
+.mine-wrapper .mine-table {
+  width: 100%;
+  margin-top: 6px;
+  background-color: #c3c3c3;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #777 #ddd #ddd #777;
+  border-spacing: 0;
+}
+
+.mine-wrapper .mine-table td {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  background: #c3c3c3;
+  background-size: 18px 18px;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #eee #777 #777 #eee;
+  text-align: center;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+/* 左键按下没抬起时的状态 */
+.mine-wrapper .mine-table td.focus {
+  border-color: #777 #eee #eee #777;
+}
+
+.mine-wrapper .mine-table td.mine,
+.mine-wrapper .mine-table td.number {
+  background-color: #e8e8e8;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #eee #777 #777 #eee;
+}
+.mine-wrapper .mine-table td.mine {
+  background-image: url(../img/mine2.png);
+}
+.mine-wrapper .mine-table td.mine.boom {
+  background-color: #f00;
+}
+.mine-wrapper .mine-table td.flag {
+  background-image: url(../img/flag.png);
+  background-size: 14px 14px;
+  border-width: 2px;
+  border-color: #eee #777 #777 #eee;
+  background-color: #c3c3c3;
+}
+.mine-wrapper .mine-table td.error-flag {
+  background-color: orange;
+}
+
+.mine-wrapper .mine-table td.number {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 16px;
+}
+.mine-wrapper .mine-table td.number.number-1 {
+  color: blue;
+}
+.mine-wrapper .mine-table td.number.number-2 {
+  color: green;
+}
+.mine-wrapper .mine-table td.number.number-3 {
+  color: red;
+}
+.mine-wrapper .mine-table td.number.number-4 {
+  color: darkblue;
+}
+.mine-wrapper .mine-table td.number.number-5 {
+  color: brown;
+}
+.mine-wrapper .mine-table td.number.number-6 {
+  color: lightseagreen;
+}
+.mine-wrapper .mine-table td.number.number-7 {
+  color: darkmagenta;
+}
+.mine-wrapper .mine-table td.number.number-8 {
+  color: rgb(65, 65, 65);
+}
+
+.message-wrapper {
+  display: none;
+  position: fixed;
+  left: 50px;
+  top: 50px;
+  z-index: 2;
+  width: 400px;
+  border: 2px solid #0050ea;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.box-header {
+  position: relative;
+  padding: 0 5px;
+  line-height: 36px;
+  background-image: linear-gradient(to right, #0064e6, #1163f7);
+  border-bottom: 1px solid #0050ea;
+}
+.box-header .name {
+  margin: 0;
+  padding: 0;
+  font-size: 18px;
+  color: #fff;
+}
+.box-header .close {
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  text-align: center;
+  font-size: 30px;
+  font-weight: 700;
+  color: #f00;
+  cursor: pointer;
+}
+
+.message-wrapper .content {
+  padding: 10px;
+  background-color: #ece9d8;
+}
+
+.message-wrapper .content .lose {
+  padding: 50px;
+  text-align: center;
+}
+.message-wrapper .content .win {
+  padding: 50px;
+  text-align: center;
+}
+.message-wrapper .content .record {
+  padding: 50px;
+}
+
+.record-btn {
+  position: fixed;
+  top: 10px;
+  left: calc(50% - 60px);
+  width: 120px;
+  height: 30px;
+}

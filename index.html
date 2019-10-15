@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>扫雷</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  
+  <!-- 扫雷 -->
+  <div class="container primary">
+    <button class="record-btn" id="J_record" title="这玩意暂时先扔这里">查看游戏记录</button>
+    <div class="level-btn-group">
+      <button class="btn btn-level active" data-level="primary">初级</button>
+      <button class="btn btn-level" data-level="middle">中级</button>
+      <button class="btn btn-level" data-level="high">高级</button>
+    </div>
+    <div class="mine-wrapper" id="J_mine">
+      <div class="info">
+        <div class="number-box timer">
+          <span class="number number-0 hundreds"></span>
+          <span class="number tens"></span>
+          <span class="number units"></span>
+        </div>
+        <div class="status normal" data-status="normal"></div>
+        <div class="number-box flag-num">
+          <span class="number hundreds"></span>
+          <span class="number tens"></span>
+          <span class="number units"></span>
+        </div>
+      </div>
+      <table class="mine-table J_mine_table">
+      </table>
+    </div>
+    <!-- 弹窗 -->
+    <div class="message-wrapper" id="J_message">
+      <div class="box-header">
+        <h2 class="name" data-name="这是一条弹窗">这是一条弹窗</h2>
+        <div class="close">×</div>
+      </div>
+      <div class="content">
+      </div>
+    </div>
+  </div>
+
+
+  <script type="text/javascript" src="js/mine.js"></script>
+  <script type="text/javascript">
+    var oMine = document.getElementById('J_mine'),
+        oTable = oMine.getElementsByClassName('J_mine_table')[0],
+        level = 'primary';
+
+    var oContainer = document.getElementsByClassName('container')[0],
+        levelBtn = oContainer.getElementsByClassName('level-btn-group')[0],
+        btns = levelBtn.getElementsByClassName('btn');
+    
+    levelBtn.addEventListener('click', handleBtnClick, false);
+        
+    function handleBtnClick (e) {
+      var e = e || window.event,
+          tar = e.target || e.srcElement,
+          lv = tar.dataset.level;
+
+      if (!lv) {
+        return;
+      }
+
+      oContainer.className = 'container ' + lv;
+
+      for (var i = 0; i < btns.length; i ++) {
+        btns[i].className = 'btn btn-level';
+      }
+      tar.classList.add('active');
+
+      mine.changeLevel(lv);
+    }
+  
+    var mine = new Mine({
+      el: oMine,
+      table: oTable,
+      level
+    });
+
+    mine.init();
+  </script>
+
+</body>
+</html>
