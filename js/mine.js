@@ -200,14 +200,14 @@
         tar = e.target || e.srcElement;
 
     preventDefaultEvent(e);
-    
+
     if (!this.theSecondUp) { // 非第二次抬起事件
       if (this.theFirstClick && this.theSecondClick) { // 双击了
         this.theSecondUp = true; // 标识双击，还有一次抬起事件
-        console.log('当前双击', this.currentSquare)
+        // console.log('当前双击', this.currentSquare)
         this.handleLeftRightClick('up', tar);
       } else if(this.theFirstClick) {
-        console.log('当前单击')
+        // console.log('当前单击')
         switch (e.which) {
           case 3:
             this.flag(this.currentSquare.box);
@@ -220,7 +220,7 @@
         this.currentSquare.box.classList.remove('focus');
       }
     } else {
-      console.log(11111, this.currentSquare)
+      // console.log(11111, this.currentSquare)
       this.theSecondUp = false; // 第二次抬起事件只做一件事
       this.currentSquare.box.classList.remove('focus');
     }
