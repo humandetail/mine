@@ -22,6 +22,13 @@
     // 游戏的状态
     this.gameStatus = 'normal';
 
+    this.theFirstClick = false; // 第一次点击时记录值
+    this.theSecondClick = false; // 第一次点击时记录值
+    this.theSecondUp = false; // 第二次抬起记录值
+
+    // this.dblClick = false; // 双击标识
+    this.currentSquare = null;
+
     // 游戏记录
     this.record = JSON.parse(localStorage.getItem('record')) || {};
   }
@@ -103,6 +110,7 @@
     }
     this.statusBtn.addEventListener('click', this.restart.bind(this), false);
     this.table.addEventListener('mousedown', this.handleMouseDown.bind(this), false);
+    doc.addEventListener('mouseup', this.handleMouseUp.bind(this), false);
 
     this.messageBox.getElementsByClassName('close')[0].addEventListener('click', this.handleMsgClose.bind(this), false);
 
@@ -158,64 +166,101 @@
     var e = ev || window.event,
         tar = e.target || e.srcElement;
 
+    preventDefaultEvent(e);
     if (this.gameStatus !== 'normal' || tar.nodeName.toLowerCase() !== 'td') {
       // 非正常游戏状态 或者 是点击到了外面的边框，不作响应
       return;
     }
 
-    this.currentSquare = tar;
-    
-    switch (e.which) {
-      case 1:
-        this.mouseLeftKeyDown(tar);
-        this.open(tar);
-        break;
-      case 3:
-        this.flag(tar);
-        break;
+    var coor = tar.getAttribute('data-coor').split(','),
+    col = coor[0],
+    row = coor[1],
+    squ = this.squares[row][col],
+    box = this.boxes[row][col];
+
+    if (!this.theFirstClick) { // 第一次点击记录里面没有值
+      this.theFirstClick = true;
+      box.classList.add('focus');
+    } else if (this.currentSquare.box && this.currentSquare.box === tar) {
+      this.theSecondClick = true;
+      this.handleLeftRightClick('down', tar);
+    } else {
+      this.currentSquare.box.classList.remove('focus')
     }
+    
+    // 做完所有判断之后再给当前点击的小方块赋值
+    this.currentSquare = {...squ, box};
   }
 
   /**
-   * 左键按下时，再按下右键会展开四周的安全格子
+   * 鼠标抬起事件
    */
-  Mine.prototype.mouseLeftKeyDown = function (elem) {
-    var coor = elem.getAttribute('data-coor').split(','),
-        x = coor[0],
-        y = coor[1];
+  Mine.prototype.handleMouseUp = function (ev) {
+    var e = ev || window.event,
+        tar = e.target || e.srcElement;
 
-    var squares = this.squares[y][x],
-        box = this.boxes[y][x];
-
-    var _this = this;
-
-    if (squares.isCheck) {
-      // 已经点击过了的
-      box.onmousedown = function (e) {
-        var e = e || window.event;
-
-        if (e.which === 3) {
-          var bounding = _this.getBounding(squares);
-          // 获取周围的旗子数量
-          var flag = bounding.reduce((flag, item) => {
-            return flag + (_this.squares[item[0]][item[1]].isFlag ? 1 : 0)
-          }, 0);
-          if (flag >= squares.value) { // 在周围插旗数量足够了，自动展开四周
-            for (var i = 0; i < bounding.length; i ++) {
-              var item = bounding[i];
-              _this.open(_this.boxes[item[0]][item[1]]);
-            }
-          }
+    preventDefaultEvent(e);
+    
+    if (!this.theSecondUp) { // 非第二次抬起事件
+      if (this.theFirstClick && this.theSecondClick) { // 双击了
+        this.theSecondUp = true; // 标识双击，还有一次抬起事件
+        console.log('当前双击', this.currentSquare)
+        this.handleLeftRightClick('up', tar);
+      } else if(this.theFirstClick) {
+        console.log('当前单击')
+        switch (e.which) {
+          case 3:
+            this.flag(this.currentSquare.box);
+            break;
+          case 1: 
+          default:
+            this.open(this.currentSquare.box);
+            break;
         }
-
-        box.onmousedown = null;
+        this.currentSquare.box.classList.remove('focus');
       }
-      box.onmouseup = function () {
-        box.onmousedown = null;
-        box.onmouseup = null;
-      }
+    } else {
+      console.log(11111, this.currentSquare)
+      this.theSecondUp = false; // 第二次抬起事件只做一件事
+      this.currentSquare.box.classList.remove('focus');
     }
 
+    this.theFirstClick = false;
+    this.theSecondClick = false;
+  }
+
+  // 左右键双击的事件
+  Mine.prototype.handleLeftRightClick = function (type, target) {
+
+    var currentSquare = this.currentSquare,
+        tar = currentSquare.box || target;
+
+    var bounding = this.getBounding(currentSquare);
+    if (bounding.length > 0) {
+      var boxes = this.boxes;
+
+      // 计算周围旗子的总数
+      var flag = bounding.reduce((flag, item) => {
+        return flag + (this.squares[item[0]][item[1]].isFlag ? 1 : 0)
+      }, 0);
+
+      bounding.forEach(item => {
+        var box = boxes[item[0]][item[1]];
+        if (type === 'down') {
+          box.classList.add('focus');
+        } else {
+          if (currentSquare.isCheck) {
+            if (flag >= currentSquare.value) { // 在周围插旗数量足够了，自动展开四周
+              this.open(box);
+            } else {
+              box.classList.remove('focus');
+            }
+          } else {
+            box.classList.remove('focus');
+          }
+        }
+      });
+    }
   }
 
   /**
@@ -388,6 +433,11 @@
 
   }
 
+  /**
+   * 获取一个坐标四周的其他位置的坐标
+   * @param Object obj { x, y }
+   * @return Array bounding;
+   */
   Mine.prototype.getBounding = function (obj) {
     var x = obj.x,
         y = obj.y,
@@ -676,6 +726,14 @@
           h: doc.docElement.clientHeight
         }
       }
+    }
+  }
+
+  function preventDefaultEvent (e) {
+    if (e.preventDefault()) {
+      e.preventDefault;
+    } else {
+      e.returnValue = false;
     }
   }
 
